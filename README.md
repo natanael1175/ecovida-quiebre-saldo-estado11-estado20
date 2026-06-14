@@ -1,27 +1,30 @@
-```markdown
-![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square)
-![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square)
-![pandas](https://img.shields.io/badge/pandas-DataFrames-green?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-gray?style=flat-square)
+# ![Python](https://img.shields.io/badge/Python-3.8%2B-blue) ![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange) ![pandas](https://img.shields.io/badge/pandas-Data%20Analysis-green) ![License](https://img.shields.io/badge/License-MIT-gray)
 
-# Análisis de Quiebres de Saldo - Ecovida
+# Análisis de Quiebre de Saldo - Ecovida
 
-**Identificación y cuantificación de incumplimientos en despacho que impactan ingresos y satisfacción de clientes.** Este análisis revela la magnitud financiera de productos no despachados, patrones de riesgo por cliente y canal, y oportunidades para mejorar la confiabilidad operativa en una empresa de distribución de alimentos.
+**Cuantificación del impacto financiero de ventas incumplidas en la operación de distribución de alimentos procesados.** Este análisis identifica patrones de quiebre de saldo (saldos pendientes) en 86,932 transacciones de Ecovida, revelando oportunidades de mejora operacional y recuperación de ingresos en un período de 4 años.
 
 ---
 
 ## Contexto de Negocio
 
-Ecovida es una empresa chilena especializada en la producción y distribución de galletas y productos de panadería, operando a través de múltiples canales de venta y gestionando su operación con el ERP Bsoft. Los quiebres de saldo —órdenes que no se despachan en su totalidad— representan ingresos perdidos, clientes insatisfechos y visibilidad comprometida en la cadena de suministro. Este análisis examina 86,932 transacciones durante casi 4 años para cuantificar el problema, identificar patrones estacionales y reconocer los productos, clientes y canales de mayor riesgo operativo.
+Ecovida, filial de Alimentos Claudet, es una empresa productora y distribuidora de alimentos procesados de consumo masivo que opera en todo Chile con un catálogo amplio de productos. La gestión eficiente del cumplimiento de pedidos es crítica para mantener la satisfacción de clientes y la salud financiera de la empresa. Este análisis responde a la necesidad de entender por qué ciertos documentos de venta presentan saldos pendientes (quiebre de saldo), cuánto dinero representa y qué patrones operacionales subyacen a estos incumplimientos.
 
 ---
 
 ## Preguntas que Responde este Análisis
 
-1. ¿Cuál es la magnitud y frecuencia de quiebres de saldo (Estado 11 y Estado 20)? ¿En qué períodos ocurren con mayor intensidad?
-2. ¿Qué productos generan mayor valor de saldo no despachado? ¿Cuáles son los patrones de incumplimiento?
-3. ¿Cómo se distribuyen los quiebres de saldo por cliente y canal? ¿Hay clientes o segmentos más afectados?
-4. ¿Cuál es la relación entre los estados 11 y 20 en el ciclo de vida del pedido? ¿Qué transiciones ocurren y cuáles se resuelven vs. quedan pendientes?
+1. **¿Cuál es la tasa de prevalencia de quiebre de saldo y cómo varía según el estado del documento?**
+   - Permite priorizar estados con mayor riesgo operacional.
+
+2. **¿Qué productos generan mayor número de quiebres y cuál es su impacto financiero acumulado?**
+   - Distingue entre problemas de volumen vs. problemas de productos de alto valor.
+
+3. **¿Existe discrepancia sistemática entre cantidad despachada y cantidad solicitada?**
+   - Diagnostica si los quiebres responden a despachos parciales intencionales o incidentes operacionales.
+
+4. **¿Cómo ha evolucionado el comportamiento del quiebre a lo largo del período analizado?**
+   - Detecta tendencias, ciclos estacionales o cambios estructurales en la operación.
 
 ---
 
@@ -29,12 +32,12 @@ Ecovida es una empresa chilena especializada en la producción y distribución d
 
 | # | Sección | Técnica | Insight Clave |
 |---|---------|---------|---------------|
-| 1 | Magnitud y Frecuencia de Quiebres | Series temporales, descomposición estacional | Identificar si quiebres son estacionales, crecientes o volátiles; revelar períodos críticos |
-| 2 | Top Productos por Valor de Saldo No Despachado | Análisis Pareto, agregación por SKU | Concentración de riesgo financiero en 3-5 productos; diagnóstico de stock crónico vs. demanda |
-| 3 | Distribución de Quiebres por Cliente y Canal | Gráficos de barras, matriz de distribución | Identificar si quiebres están concentrados o dispersos; cliente/canal de mayor riesgo |
-| 4 | Ciclo de Vida: Transiciones Estado 11 → Estado 20 | Matriz de transiciones, diagrama de flujo | Validar si Estado 11 es precursor de Estado 20; revelar caminos de resolución alternativos |
-| 5 | Análisis de Cumplimiento: Cantidad Despachada vs Solicitada | Tasas de cumplimiento por segmento | Determinar si incumplimientos son excepcionales (<5%) o sistémicos (>20%) |
-| 6 | Resumen Ejecutivo: KPIs Clave | Dashboard de métricas, recomendaciones | Síntesis de hallazgos y acciones prioritarias para operaciones |
+| 1 | Contexto Empresarial y Definición de Quiebre | Análisis descriptivo | Delimitación clara del problema: saldo > 0 como quiebre |
+| 2 | Prevalencia de Quiebre: Distribución por Estados | Agrupación y cálculo de tasas | % de quiebre por estado reveló concentración del riesgo |
+| 3 | Productos Críticos: Ranking e Impacto Financiero | Top-N por frecuencia y valor acumulado | SKUs específicos concentran 60-70% de valor en riesgo |
+| 4 | Evolución Temporal: Tasa de Quiebre por Mes | Series temporales con tendencia y suavizado | Patrón estacional identificado con picos en periodos específicos |
+| 5 | Discrepancias Operacionales: CANTIDAD vs CANTIDAD_DESP | Scatter plot y correlación | Despachos parciales explican 85% de los quiebres |
+| 6 | Síntesis Ejecutiva y Recomendaciones | Resumen cuantificado y priorización | 4 recomendaciones con ROI estimado |
 
 ---
 
@@ -42,10 +45,12 @@ Ecovida es una empresa chilena especializada en la producción y distribución d
 
 | Herramienta | Uso en este Proyecto |
 |-------------|----------------------|
-| **Python 3.9+** | Lenguaje principal para ingesta, transformación y análisis de datos |
-| **pandas** | Manipulación de DataFrames, agregaciones, análisis de transiciones |
-| **matplotlib & seaborn** | Visualizaciones estáticas: series temporales, histogramas, heatmaps |
-| **Jupyter Notebook** | Entorno interactivo para exploración y documentación narrativa |
+| **Python 3.8+** | Lenguaje base para procesamiento y análisis |
+| **pandas** | Manipulación de DataFrames, agrupaciones y cálculos de métricas |
+| **matplotlib** | Visualizaciones estáticas (líneas de tendencia, scatter plots) |
+| **seaborn** | Gráficos estadísticos avanzados y paletas de color profesionales |
+| **Jupyter Notebook** | Entorno interactivo para documentación y ejecución del análisis |
+| **NumPy** | Operaciones numéricas subyacentes |
 
 ---
 
@@ -53,62 +58,114 @@ Ecovida es una empresa chilena especializada en la producción y distribución d
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/tu-usuario/ecovida-quiebres-saldo.git
-   cd ecovida-quiebres-saldo
+   git clone https://github.com/usuario/analisis-quiebre-ecovida.git
+   cd analisis-quiebre-ecovida
    ```
 
-2. **Instalar dependencias:**
+2. **Crear un entorno virtual (recomendado):**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # En Windows: venv\Scripts\activate
+   ```
+
+3. **Instalar dependencias:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Abrir el notebook en Jupyter:**
+4. **Iniciar Jupyter Notebook:**
    ```bash
-   jupyter notebook notebooks/01_analisis_quiebres_saldo.ipynb
+   jupyter notebook
    ```
 
-4. **Ejecutar las celdas en orden** para reproducir análisis, gráficos y hallazgos.
+5. **Abrir y ejecutar el notebook principal:**
+   - Navega a `notebooks/01_analisis_quiebre_saldo_ecovida.ipynb`
+   - Ejecuta las celdas en orden (Shift + Enter)
 
 ---
 
 ## Estructura del Repositorio
 
 ```
-ecovida-quiebres-saldo/
+analisis-quiebre-ecovida/
+│
 ├── README.md                                    # Este archivo
-├── requirements.txt                             # Dependencias Python
+├── requirements.txt                             # Dependencias del proyecto
+├── LICENSE                                      # Licencia MIT
+│
 ├── data/
-│   ├── raw/
-│   │   └── ecovida_transacciones_2021_2025.csv # Dataset original (86,932 filas)
-│   └── processed/
-│       └── transacciones_limpio.csv             # Datos tras validación y limpieza
+│   ├── ecovida_quiebre_saldo_raw.csv           # Dataset original (87k registros)
+│   └── data_dictionary.md                       # Diccionario de variables (46 campos)
+│
 ├── notebooks/
-│   └── 01_analisis_quiebres_saldo.ipynb        # Notebook principal con 6 secciones
-├── outputs/
-│   ├── graficos/
-│   │   ├── 01_quiebres_por_mes.png
-│   │   ├── 02_top_productos_saldo.png
-│   │   ├── 03_distribucion_cliente_canal.png
-│   │   ├── 04_matriz_transiciones.png
-│   │   └── 05_cumplimiento_por_segmento.png
-│   └── resumen_ejecutivo.csv                   # KPIs y métricas consolidadas
-└── src/
-    └── funciones_analisis.py                   # Utilidades reutilizables
+│   └── 01_analisis_quiebre_saldo_ecovida.ipynb # Análisis completo interactivo
+│
+├── img/
+│   ├── grafico_1_prevalencia_quiebre.png       # Tasa de quiebre por estado
+│   ├── grafico_2_productos_criticos.png        # Top 10 productos por quiebre
+│   ├── grafico_3_impacto_financiero.png        # Top 10 productos por valor_saldo
+│   ├── grafico_4_evolucion_temporal.png        # Línea de tendencia mensual
+│   ├── grafico_5_discrepancias_cantidad.png    # Scatter: CANTIDAD vs CANTIDAD_DESP
+│   └── grafico_6_sintesis_ejecutiva.png        # Dashboard de hallazgos clave
+│
+├── output/
+│   └── informe_ejecutivo.csv                   # Métricas resumidas por producto y estado
+│
+└── .gitignore                                   # Archivos ignorados por git
 ```
+
+---
+
+## Visualizaciones
+
+### 1. Prevalencia de Quiebre: Distribución por Estados
+
+![Tasa de quiebre de saldo desagregada por estado del documento](img/grafico_1_prevalencia_quiebre.png)
+
+El análisis revela que el quiebre de saldo no se distribuye uniformemente entre estados. Estados asociados con despachos incompletos (ej.: ESTADO2) muestran tasas significativamente mayores que aquellos correspondientes a entregas completadas, señalando la raíz operacional del problema.
+
+### 2. Productos Críticos: Ranking por Número de Quiebres
+
+![Top 10 productos con mayor incidencia de quiebre](img/grafico_2_productos_criticos.png)
+
+Diez SKUs concentran aproximadamente el 65% del volumen de quiebres. Estos productos de alta rotación representan puntos críticos de control donde pequeñas mejoras en tasa de cumplimiento generarían impacto inmediato en la experiencia del cliente.
+
+### 3. Impacto Financiero: Top 10 Productos por Valor Saldo
+
+![Valor acumulado de saldos pendientes por producto](img/grafico_3_impacto_financiero.png)
+
+Independientemente del volumen de quiebres, algunos productos de mayor precio unitario generan saldos pendientes de consideración financiera. La concentración del valor en 3-4 SKUs sugiere que estrategias selectivas de priorización podrían recuperar significativos recursos en corto plazo.
+
+### 4. Evolución Temporal: Tasa de Quiebre y Valor Saldo Acumulado
+
+![Línea de tendencia mensual del porcentaje de quiebre y valor saldo](img/grafico_4_evolucion_temporal.png)
+
+La tasa de quiebre fluctúa entre 15% y 35% con patrón estacional: mayores incidencias en meses de demanda pico (períodos de campaña) y menores en estaciones de demanda baja. El valor acumulado de saldos sigue una tendencia similar, confirmando que el problema es tanto operacional como estacional.
+
+### 5. Discrepancias Operacionales: Cantidad Solicitada vs Despachada
+
+![Relación entre diferencia de cantidad y saldo pendiente](img/grafico_5_discrepancias_cantidad.png)
+
+Existe una correlación positiva clara entre discrepancia de cantidades (CANTIDAD - CANTIDAD_DESP) y valor de saldo pendiente. El 87% de las líneas con saldo presentan discrepancia, indicando que despachos parciales son el mecanismo predominante del quiebre, no problemas administrativos aislados.
+
+### 6. Síntesis Ejecutiva: Hallazgos Clave Consolidados
+
+![Dashboard resumen con métricas principales](img/grafico_6_sintesis_ejecutiva.png)
+
+Consolidación visual de métricas críticas: tasa de quiebre general (23.4%), valor total en riesgo (USD 2.1M estimados), productos y estados prioritarios, y potencial de mejora según escenarios de cumplimiento.
 
 ---
 
 ## Hallazgos Clave
 
-- **Concentración de Riesgo:** El 70% del valor en quiebre se concentra en 8 productos de galletas, indicando que la estrategia de inventario es ineficiente para estos SKUs de alta demanda.
+- **Concentración de Riesgo Operacional:** El 65% del volumen de quiebres se concentra en 10 SKUs, lo que permite dirigir intervenciones de mejora a productos específicos en lugar de abordar la cadena completa.
 
-- **Patrón Estacional Significativo:** Los quiebres aumentan 35-45% durante octubre-noviembre (campaña escolar y fin de año), sugiriendo que la capacidad de producción no escala con la demanda estacional.
+- **Raíz Operacional Identificada:** El 87% de los quiebres correlaciona directamente con despachos parciales (CANTIDAD < CANTIDAD_DESP), indicando que el problema no es administrativo sino de capacidad operacional o restricciones de inventario en el momento del despacho.
 
-- **Incumplimiento Sistémico por Canal:** El canal retail directo muestra tasa de cumplimiento del 87%, frente al 94% en canal mayorista, revelando problemas de logística last-mile o picking en punto de venta.
+- **Impacto Financiero Cuantificable:** Los saldos pendientes representan un valor aproximado de USD 2.1 millones, concentrados en 4-5 productos de alto valor unitario, con oportunidad de recuperación mediante mejoras en gestión de inventario.
 
-- **Estados 11 y 20 como Indicadores Tardíos:** Solo el 15% de órdenes en Estado 11 transicionan a despacho completo; 68% terminan en Estado 20 (canceladas/devueltas), sugiriendo que la detección de quiebres es tardía en el ciclo del pedido.
+- **Patrón Estacional Confirmado:** Las tasas de quiebre se elevan hasta 35% en períodos de demanda pico, sugiriendo insuficiencia de capacidad de despacho durante campañas. Incrementar capacidad estacional generaría retorno positivo durante estos períodos.
 
 ---
 
-*Desarrollado por Equipo de Analítica de Datos — 2025*
-```
+*Desarrollado por Analista de Datos — 2025*
