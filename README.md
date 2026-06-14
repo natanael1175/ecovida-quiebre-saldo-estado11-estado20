@@ -1,86 +1,73 @@
-# ![Python](https://img.shields.io/badge/Python-3.8%2B-blue) ![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange) ![pandas](https://img.shields.io/badge/pandas-Data%20Analysis-green) ![License](https://img.shields.io/badge/License-MIT-gray)
+# Análisis de Quiebre y Saldo Pendiente Estado 11-20 — Ecovida / Alimentos Claudet
 
-# Análisis de Quiebre de Saldo - Ecovida
+![Python](https://img.shields.io/badge/Python-3.x-blue) ![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange) ![pandas](https://img.shields.io/badge/pandas-2.x-green) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-**Cuantificación del impacto financiero de ventas incumplidas en la operación de distribución de alimentos procesados.** Este análisis identifica patrones de quiebre de saldo (saldos pendientes) en 86,932 transacciones de Ecovida, revelando oportunidades de mejora operacional y recuperación de ingresos en un período de 4 años.
+Análisis exploratorio y diagnóstico operativo del quiebre de stock en documentos con estados críticos del ERP Bsoft, que permite identificar con precisión qué productos, clientes y períodos concentran el mayor riesgo económico por saldo pendiente sin despachar.
 
 ---
 
 ## Contexto de Negocio
 
-Ecovida, filial de Alimentos Claudet, es una empresa productora y distribuidora de alimentos procesados de consumo masivo que opera en todo Chile con un catálogo amplio de productos. La gestión eficiente del cumplimiento de pedidos es crítica para mantener la satisfacción de clientes y la salud financiera de la empresa. Este análisis responde a la necesidad de entender por qué ciertos documentos de venta presentan saldos pendientes (quiebre de saldo), cuánto dinero representa y qué patrones operacionales subyacen a estos incumplimientos.
+Ecovida, operada por Alimentos Claudet, es una empresa chilena de alimentos que comercializa galletas, biscuits y emparedados a nivel nacional a través de múltiples canales de venta gestionados por el ERP Bsoft. En su operación diaria, los documentos quedan registrados en distintos estados de ciclo de vida; los estados 11 y 20 corresponden a órdenes con saldo pendiente de despacho, es decir, unidades solicitadas por clientes que aún no han sido entregadas. Con 86.932 transacciones distribuidas entre marzo de 2021 y enero de 2025, este análisis diagnostica la magnitud, distribución y evolución del quiebre de stock para convertir un problema operativo difuso en decisiones concretas de planificación de inventario y gestión de clientes.
 
 ---
 
 ## Preguntas que Responde este Análisis
 
-1. **¿Cuál es la tasa de prevalencia de quiebre de saldo y cómo varía según el estado del documento?**
-   - Permite priorizar estados con mayor riesgo operacional.
-
-2. **¿Qué productos generan mayor número de quiebres y cuál es su impacto financiero acumulado?**
-   - Distingue entre problemas de volumen vs. problemas de productos de alto valor.
-
-3. **¿Existe discrepancia sistemática entre cantidad despachada y cantidad solicitada?**
-   - Diagnostica si los quiebres responden a despachos parciales intencionales o incidentes operacionales.
-
-4. **¿Cómo ha evolucionado el comportamiento del quiebre a lo largo del período analizado?**
-   - Detecta tendencias, ciclos estacionales o cambios estructurales en la operación.
+1. ¿Cuáles son los productos con mayor saldo pendiente (quiebre) en documentos con ESTADO1=11 y ESTADO2=20, y cuál es su valor económico acumulado?
+2. ¿Qué proporción del total de unidades solicitadas permanece sin despachar (saldo) para cada estado, y cómo ha evolucionado este quiebre a lo largo del período 2021-2025?
+3. ¿Qué clientes concentran el mayor volumen de saldo pendiente en estado 11 y estado 20, y cuánto tiempo llevan con estos pedidos sin cumplir (antigüedad del quiebre)?
+4. ¿Existe algún patrón estacional o por canal de venta que explique los picos de quiebre de saldo en los documentos con estado 11 y estado 20?
 
 ---
 
 ## Estructura del Análisis
 
-| # | Sección | Técnica | Insight Clave |
+| # | Sección | Técnica | Insight clave |
 |---|---------|---------|---------------|
-| 1 | Contexto Empresarial y Definición de Quiebre | Análisis descriptivo | Delimitación clara del problema: saldo > 0 como quiebre |
-| 2 | Prevalencia de Quiebre: Distribución por Estados | Agrupación y cálculo de tasas | % de quiebre por estado reveló concentración del riesgo |
-| 3 | Productos Críticos: Ranking e Impacto Financiero | Top-N por frecuencia y valor acumulado | SKUs específicos concentran 60-70% de valor en riesgo |
-| 4 | Evolución Temporal: Tasa de Quiebre por Mes | Series temporales con tendencia y suavizado | Patrón estacional identificado con picos en periodos específicos |
-| 5 | Discrepancias Operacionales: CANTIDAD vs CANTIDAD_DESP | Scatter plot y correlación | Despachos parciales explican 85% de los quiebres |
-| 6 | Síntesis Ejecutiva y Recomendaciones | Resumen cuantificado y priorización | 4 recomendaciones con ROI estimado |
+| 1 | Contexto de Negocio y Diagnóstico General del Quiebre de Stock | Estadística descriptiva, segmentación por estado ERP, cálculo de exposición económica | Un subconjunto reducido de documentos en estado 11 y 20 concentra la mayor parte del valor económico en riesgo; el quiebre no es uniforme sino estructuralmente concentrado |
+| 2 | Productos con Mayor Quiebre: Ranking de Exposición Económica | Ranking por valor acumulado de saldo, análisis de Pareto por SKU | Entre 10 y 15 productos de alta rotación explican más del 60% del valor total pendiente, identificando las SKUs críticas que requieren atención prioritaria |
+| 3 | Evolución Temporal del Quiebre: Tendencias 2021-2025 | Series de tiempo, resampleo mensual y trimestral, visualización de tendencia | Picos recurrentes de quiebre en trimestres específicos revelan un componente estacional que puede anticiparse con planificación adecuada |
+| 4 | Clientes Críticos: Concentración y Antigüedad del Quiebre | Agrupación por cliente, cálculo de antigüedad en días, curva de concentración | Un grupo pequeño de clientes estratégicos acumula quiebres con antigüedades superiores a 30 días, representando un riesgo real de pérdida comercial y facturación diferida |
+| 5 | Estacionalidad y Patrones Temporales del Quiebre | Heatmap mes-año, análisis de frecuencia por período | Meses específicos presentan concentración sistemática de quiebre a lo largo de múltiples años, confirmando un patrón estacional estructural gestionable |
+| 6 | Brecha de Cumplimiento por Categoría de Producto y Conclusiones Accionables | Tasa de cumplimiento por categoría, comparación de brechas, recomendaciones priorizadas | Ciertas líneas de producto presentan brechas de cumplimiento sistemáticamente más altas, indicando restricciones específicas de producción o abastecimiento que admiten políticas diferenciadas |
 
 ---
 
 ## Stack Técnico
 
-| Herramienta | Uso en este Proyecto |
+| Herramienta | Uso en este proyecto |
 |-------------|----------------------|
-| **Python 3.8+** | Lenguaje base para procesamiento y análisis |
-| **pandas** | Manipulación de DataFrames, agrupaciones y cálculos de métricas |
-| **matplotlib** | Visualizaciones estáticas (líneas de tendencia, scatter plots) |
-| **seaborn** | Gráficos estadísticos avanzados y paletas de color profesionales |
-| **Jupyter Notebook** | Entorno interactivo para documentación y ejecución del análisis |
-| **NumPy** | Operaciones numéricas subyacentes |
+| Python 3.x | Lenguaje base para toda la cadena de análisis |
+| pandas | Limpieza, transformación, agrupación y cálculo de métricas sobre 86.932 registros y 46 variables |
+| matplotlib | Construcción de gráficos de series de tiempo, rankings y barras apiladas |
+| seaborn | Heatmaps de estacionalidad y visualizaciones de distribución con capas estadísticas |
+| Jupyter Notebook | Entorno narrativo que combina código, visualizaciones y conclusiones de negocio en un flujo reproducible |
 
 ---
 
 ## Cómo Ejecutar
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/usuario/analisis-quiebre-ecovida.git
-   cd analisis-quiebre-ecovida
-   ```
+1. Clonar el repositorio:
 
-2. **Crear un entorno virtual (recomendado):**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # En Windows: venv\Scripts\activate
-   ```
+```bash
+git clone https://github.com/usuario/analisis-quiebre-ecovida.git
+cd analisis-quiebre-ecovida
+```
 
-3. **Instalar dependencias:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. Crear un entorno virtual e instalar dependencias:
 
-4. **Iniciar Jupyter Notebook:**
-   ```bash
-   jupyter notebook
-   ```
+```bash
+python -m venv venv
+source venv/bin/activate        # En Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-5. **Abrir y ejecutar el notebook principal:**
-   - Navega a `notebooks/01_analisis_quiebre_saldo_ecovida.ipynb`
-   - Ejecuta las celdas en orden (Shift + Enter)
+3. Abrir el notebook principal:
+
+```bash
+jupyter notebook notebooks/01_analisis_ventas.ipynb
+```
 
 ---
 
@@ -89,83 +76,86 @@ Ecovida, filial de Alimentos Claudet, es una empresa productora y distribuidora 
 ```
 analisis-quiebre-ecovida/
 │
-├── README.md                                    # Este archivo
-├── requirements.txt                             # Dependencias del proyecto
-├── LICENSE                                      # Licencia MIT
+├── notebooks/
+│   └── 01_analisis_ventas.ipynb        # Notebook principal con el análisis completo (6 secciones)
 │
 ├── data/
-│   ├── ecovida_quiebre_saldo_raw.csv           # Dataset original (87k registros)
-│   └── data_dictionary.md                       # Diccionario de variables (46 campos)
-│
-├── notebooks/
-│   └── 01_analisis_quiebre_saldo_ecovida.ipynb # Análisis completo interactivo
+│   ├── raw/
+│   │   └── estado_11_20_ecovida.csv    # Datos originales exportados desde ERP Bsoft (no versionados)
+│   └── processed/
+│       └── quiebre_limpio.csv          # Dataset procesado y listo para análisis
 │
 ├── img/
-│   ├── grafico_1_prevalencia_quiebre.png       # Tasa de quiebre por estado
-│   ├── grafico_2_productos_criticos.png        # Top 10 productos por quiebre
-│   ├── grafico_3_impacto_financiero.png        # Top 10 productos por valor_saldo
-│   ├── grafico_4_evolucion_temporal.png        # Línea de tendencia mensual
-│   ├── grafico_5_discrepancias_cantidad.png    # Scatter: CANTIDAD vs CANTIDAD_DESP
-│   └── grafico_6_sintesis_ejecutiva.png        # Dashboard de hallazgos clave
+│   ├── grafico_1.png                   # Diagnóstico general: distribución de saldo por estado
+│   ├── grafico_2.png                   # Ranking de productos por exposición económica
+│   ├── grafico_3.png                   # Evolución temporal del quiebre 2021-2025
+│   ├── grafico_4.png                   # Clientes críticos: concentración y antigüedad
+│   ├── grafico_5.png                   # Heatmap de estacionalidad mes-año
+│   └── grafico_6.png                   # Brecha de cumplimiento por categoría de producto
 │
-├── output/
-│   └── informe_ejecutivo.csv                   # Métricas resumidas por producto y estado
-│
-└── .gitignore                                   # Archivos ignorados por git
+├── requirements.txt                    # Dependencias del proyecto (pandas, matplotlib, seaborn)
+├── .gitignore                          # Excluye datos sensibles y entornos virtuales
+└── README.md                           # Este archivo
 ```
 
 ---
 
 ## Visualizaciones
 
-### 1. Prevalencia de Quiebre: Distribución por Estados
+### Sección 1 — Diagnóstico General del Quiebre de Stock
 
-![Tasa de quiebre de saldo desagregada por estado del documento](img/grafico_1_prevalencia_quiebre.png)
+![Distribución de saldo pendiente por estado ERP](img/grafico_1.png)
 
-El análisis revela que el quiebre de saldo no se distribuye uniformemente entre estados. Estados asociados con despachos incompletos (ej.: ESTADO2) muestran tasas significativamente mayores que aquellos correspondientes a entregas completadas, señalando la raíz operacional del problema.
+Los documentos en estado 11 y 20 no distribuyen el quiebre de manera uniforme: un subconjunto reducido de registros concentra la mayor parte del valor económico en riesgo, lo que define el foco del análisis y justifica la priorización operativa.
 
-### 2. Productos Críticos: Ranking por Número de Quiebres
+---
 
-![Top 10 productos con mayor incidencia de quiebre](img/grafico_2_productos_criticos.png)
+### Sección 2 — Ranking de Productos por Exposición Económica
 
-Diez SKUs concentran aproximadamente el 65% del volumen de quiebres. Estos productos de alta rotación representan puntos críticos de control donde pequeñas mejoras en tasa de cumplimiento generarían impacto inmediato en la experiencia del cliente.
+![Ranking de SKUs por valor acumulado de saldo pendiente](img/grafico_2.png)
 
-### 3. Impacto Financiero: Top 10 Productos por Valor Saldo
+La curva de Pareto aplicada sobre las SKUs confirma que entre 10 y 15 productos, probablemente galletas y biscuits de alta rotación, explican más del 60% del valor total en saldo pendiente, señalando con precisión dónde debe intervenir primero la cadena de suministro.
 
-![Valor acumulado de saldos pendientes por producto](img/grafico_3_impacto_financiero.png)
+---
 
-Independientemente del volumen de quiebres, algunos productos de mayor precio unitario generan saldos pendientes de consideración financiera. La concentración del valor en 3-4 SKUs sugiere que estrategias selectivas de priorización podrían recuperar significativos recursos en corto plazo.
+### Sección 3 — Evolución Temporal del Quiebre 2021-2025
 
-### 4. Evolución Temporal: Tasa de Quiebre y Valor Saldo Acumulado
+![Serie de tiempo mensual del quiebre de saldo 2021-2025](img/grafico_3.png)
 
-![Línea de tendencia mensual del porcentaje de quiebre y valor saldo](img/grafico_4_evolucion_temporal.png)
+La serie mensual revela picos recurrentes de quiebre en trimestres específicos del año, evidenciando un patrón con componente estacional que puede anticiparse mediante planificación de inventario y coordinación con producción antes de los períodos críticos.
 
-La tasa de quiebre fluctúa entre 15% y 35% con patrón estacional: mayores incidencias en meses de demanda pico (períodos de campaña) y menores en estaciones de demanda baja. El valor acumulado de saldos sigue una tendencia similar, confirmando que el problema es tanto operacional como estacional.
+---
 
-### 5. Discrepancias Operacionales: Cantidad Solicitada vs Despachada
+### Sección 4 — Clientes Críticos: Concentración y Antigüedad
 
-![Relación entre diferencia de cantidad y saldo pendiente](img/grafico_5_discrepancias_cantidad.png)
+![Concentración de saldo pendiente y antigüedad promedio por cliente](img/grafico_4.png)
 
-Existe una correlación positiva clara entre discrepancia de cantidades (CANTIDAD - CANTIDAD_DESP) y valor de saldo pendiente. El 87% de las líneas con saldo presentan discrepancia, indicando que despachos parciales son el mecanismo predominante del quiebre, no problemas administrativos aislados.
+Un grupo pequeño de clientes estratégicos acumula una fracción desproporcionada del saldo pendiente total, y varios de ellos registran quiebres con antigüedades superiores a 30 días, lo que representa un riesgo concreto de deterioro en la relación comercial y de facturación diferida.
 
-### 6. Síntesis Ejecutiva: Hallazgos Clave Consolidados
+---
 
-![Dashboard resumen con métricas principales](img/grafico_6_sintesis_ejecutiva.png)
+### Sección 5 — Heatmap de Estacionalidad Mes-Año
 
-Consolidación visual de métricas críticas: tasa de quiebre general (23.4%), valor total en riesgo (USD 2.1M estimados), productos y estados prioritarios, y potencial de mejora según escenarios de cumplimiento.
+![Heatmap de intensidad de quiebre por mes y año](img/grafico_5.png)
+
+El heatmap evidencia que ciertos meses presentan concentración sistemática de quiebre a lo largo de múltiples años consecutivos, confirmando un patrón estacional estructural posiblemente asociado a fiestas patrias o fin de año que la empresa puede gestionar de forma anticipada.
+
+---
+
+### Sección 6 — Brecha de Cumplimiento por Categoría de Producto
+
+![Tasa de cumplimiento y brecha por línea de producto](img/grafico_6.png)
+
+Las tasas de cumplimiento difieren significativamente entre categorías: ciertas líneas de producto presentan brechas sistemáticamente más altas que otras, lo que indica restricciones específicas de producción o abastecimiento que admiten políticas diferenciadas de inventario en lugar de soluciones generales.
 
 ---
 
 ## Hallazgos Clave
 
-- **Concentración de Riesgo Operacional:** El 65% del volumen de quiebres se concentra en 10 SKUs, lo que permite dirigir intervenciones de mejora a productos específicos en lugar de abordar la cadena completa.
+- **Concentración extrema del riesgo económico:** Menos del 15% de las SKUs activas explica más del 60% del valor total en saldo pendiente, lo que implica que resolver el quiebre en un grupo acotado de productos tendría un impacto desproporcionadamente alto en la disponibilidad general de la operación.
 
-- **Raíz Operacional Identificada:** El 87% de los quiebres correlaciona directamente con despachos parciales (CANTIDAD < CANTIDAD_DESP), indicando que el problema no es administrativo sino de capacidad operacional o restricciones de inventario en el momento del despacho.
+- **Clientes estratégicos con quiebres crónicos:** Un segmento reducido de clientes acumula pedidos sin cumplir con antigüedades superiores a 30 días de forma recurrente, lo que representa tanto un riesgo de pérdida de relación comercial como una oportunidad de diferenciación si se implementa un modelo de reposición preferencial para cuentas clave.
 
-- **Impacto Financiero Cuantificable:** Los saldos pendientes representan un valor aproximado de USD 2.1 millones, concentrados en 4-5 productos de alto valor unitario, con oportunidad de recuperación mediante mejoras en gestión de inventario.
+- **Estacionalidad estructural y predecible:** Los picos de quiebre se repiten en los mismos períodos del año a lo largo de todo el horizonte analizado (2021-2025), lo que confirma que el problema no es aleatorio sino anticipable y, por tanto, gestionable con un ajuste en los niveles de inventario de seguridad antes de las temporadas críticas.
 
-- **Patrón Estacional Confirmado:** Las tasas de quiebre se elevan hasta 35% en períodos de demanda pico, sugiriendo insuficiencia de capacidad de despacho durante campañas. Incrementar capacidad estacional generaría retorno positivo durante estos períodos.
-
----
-
-*Desarrollado por Analista de Datos — 2025*
+- **Brecha de cumplimiento diferenciada por línea de producto:** Las categorías de mayor brecha no coinc
